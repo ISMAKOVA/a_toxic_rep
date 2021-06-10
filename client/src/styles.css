@@ -53,7 +53,7 @@ a:hover{
     color: #728AB7 !important;
     font-size: 16px;
     padding: 23px 0 23px 40px;
-    margin: 13px 0 13px 0;
+    /*margin: 13px 0 13px 0;*/
 }
 .form-control::placeholder{
     color: #728AB7 !important;
@@ -123,6 +123,16 @@ a:hover{
     outline: none !important;
     border: none;
 }
+input[type="file"] {
+    border: none;
+    outline: none !important;
+    background: #F0F0F3;
+}
+.form-control-file{
+    border: none;
+    outline: none !important;
+    background: #F0F0F3;
+}
 .small-text{
     font-size: 16px;
 }
@@ -168,7 +178,9 @@ a:hover{
     border-radius:30px !important;
     border: none;
 }
-
+.small{
+    height: 20vh;
+}
 .avatar{
     width: 60px;
     height: 60px;
@@ -179,3 +191,15 @@ a:hover{
     background: linear-gradient(196deg, rgba(197,144,239,1) 0%, rgba(116,95,242,1) 100%);
 
 }
+
+.neo-nav a[aria-selected="true"]{
+    background: #F0F0F3;
+    box-shadow: inset 1px 1px 2px rgba(174, 174, 192, 0.4), inset -1px -1px 2px #fff9;
+    transition:box-shadow 0.3s cubic-bezier(.79,.21,.06,.81);
+    border-radius: 30px;
+    border: none;
+    color: #745FF2 !important;
+
+}
+
+

@@ -3,16 +3,18 @@ import {Button, Col, Container, Dropdown, DropdownButton, Form, FormControl, Row
 import ModerationTable from "../components/ModerationTable";
 
 const ModerationPage = () => {
+
     return (
         <Container>
             <Row className="my-3">
                 <Col>
                     <Form inline>
-                        <FormControl type="text" placeholder="Введите название сообщества" className=" mr-sm-2" style={{width:"50%"}} />
+                        <FormControl type="text" placeholder="Введите уникальное имя сообщества" className=" mr-sm-2" style={{width:"50%"}} />
                         <Button type="button">Поиск</Button>
                     </Form>
                 </Col>
             </Row>
+
             <h3 className="my-3">Комментарии</h3>
             <Row className="my-3">
                 <Col>
