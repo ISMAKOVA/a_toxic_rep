@@ -195,6 +195,12 @@ input[type="file"] {
     background: linear-gradient(196deg, rgba(197,144,239,1) 0%, rgba(116,95,242,1) 100%);
 
 }
+avatar_img{
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-left: 20px;
+}
 
 .neo-nav a[aria-selected="true"]{
     background: #F0F0F3;

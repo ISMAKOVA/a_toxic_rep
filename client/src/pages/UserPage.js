@@ -16,12 +16,12 @@ const UserPage = observer(() => {
             localStorage.removeItem("token");
         }
     }
-    //
-    // useEffect(() => {
-    //     fetchOneUser(parseInt(jwt_decode(storedToken).id)).then(data =>setEmail(data.email))
-    //     fetchOneUser(parseInt(jwt_decode(storedToken).id)).then(data =>setUsername(data.username))
-    //
-    // }, [])
+
+    useEffect(() => {
+        fetchOneUser(parseInt(storedToken.id)).then(data =>setEmail(data.email))
+        fetchOneUser(parseInt(storedToken.id)).then(data =>setUsername(data.username))
+
+    }, [])
 
 
     const [email, setEmail] = useState('')

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {Context} from "../index";
 import {Button, Container, Nav, Navbar, NavDropdown, NavLink} from "react-bootstrap";
 import {BrowserRouter, Route, Link, useLocation} from "react-router-dom";
@@ -6,6 +6,7 @@ import {observer} from "mobx-react-lite";
 import styles from '../styles.css';
 import {LOGIN_ROUTE, MAIN_ROUTE, MODERATION_ROUTE, STATISTICS_ROUTE, USER_ROUTE} from "../utils/consts";
 import jwt_decode from "jwt-decode";
+import {fetchOneUser} from "../http/user_api";
 
 const NavBar = observer(() => {
     const storedToken = localStorage.getItem("token");
@@ -24,8 +25,10 @@ const NavBar = observer(() => {
         user.setUser({})
         user.setIsAuth(false)
     }
-    return (
+    const [avatar, setAvatar] = useState('')
+    fetchOneUser(parseInt(storedToken.id)).then(data =>setAvatar(data.avatar))
 
+    return (
         <Navbar expand="lg" className="bg_color pt-3">
             <Container >
                 <Navbar.Brand as={Link} to={isLogin?LOGIN_ROUTE:MAIN_ROUTE} className="logo">a_toxic</Navbar.Brand>
@@ -37,7 +40,7 @@ const NavBar = observer(() => {
                                 <Nav.Link as={Link} to={MODERATION_ROUTE} className="my-auto">Модерация контента</Nav.Link>
                                 <Nav.Link as={Link} to={STATISTICS_ROUTE} className="my-auto">Статистика</Nav.Link>
                                 <Nav.Link as={Link} to={LOGIN_ROUTE} onClick={() => logOut()} className="my-auto">Выйти</Nav.Link>
-                                <Nav.Link as={Link} to={USER_ROUTE} className="avatar my-auto"> </Nav.Link>
+                                <Nav.Link as={Link} to={USER_ROUTE} className="avatar my-auto"><img className="avatar_img" src={process.env.REACT_APP_API_URL +avatar} alt="pic"/> </Nav.Link>
                             </Nav>
                             :
                             <Nav className="ml-auto">

@@ -2,11 +2,13 @@ import {$authHost, $host} from "./index";
 import jwt_decode from "jwt-decode";
 
 export const registration = async (reg_data) => {
+    console.log("registration data: ",reg_data)
     const {data} = await $host.post('api/user/registration', reg_data, {headers: {
             'Content-Type': `multipart/form-data;`,
         }})
     localStorage.removeItem('token')
     localStorage.setItem('token', data.token)
+    console.log("registration token: ",localStorage.getItem('token'))
     return jwt_decode(data.token)
 }
 
@@ -36,6 +38,8 @@ export const check = async () => {
 
 export const fetchOneUser = async (id) =>{
     const {data} = await $host.get('api/user/'+id)
-    return data
+    localStorage.removeItem("token")
+    localStorage.setItem('token', data.token)
+    return jwt_decode(data.token)
 }
 

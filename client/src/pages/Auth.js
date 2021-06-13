@@ -54,7 +54,6 @@ const Auth = observer(() => {
             }
             if (data) {
                 user.setIsAuth(true)
-                console.log('sddddd-',user.isAuth)
                 user.setUser(data)
                 history.push(MAIN_ROUTE)
             }
@@ -96,7 +95,6 @@ const Auth = observer(() => {
                         style={{display: 'none'}}
                     />
                     {isLogin ? "" :
-
 
                         <Button className="mt-3 text_color norm_font" onClick={() => fileInput.current.click()}>
                             Загрузить аватар
