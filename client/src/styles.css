@@ -7,13 +7,17 @@ body{
     font-weight: 400;
     line-height: 33px;
 }
-
+.norm_font{
+    font-size: 16px !important;
+    font-style: normal !important;
+    font-weight: 400 !important;
+}
 .bg_color{
     background-color: #F0F0F3 !important;
 }
 
 .text_color{
-    color: #728AB7;
+    color: #728AB7 !important;
 }
 .shadow_color{
     color: #808B9F;

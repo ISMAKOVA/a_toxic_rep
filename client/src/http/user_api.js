@@ -5,14 +5,15 @@ export const registration = async (reg_data) => {
     const {data} = await $host.post('api/user/registration', reg_data, {headers: {
             'Content-Type': `multipart/form-data;`,
         }})
+    localStorage.removeItem('token')
     localStorage.setItem('token', data.token)
     return jwt_decode(data.token)
 }
 
 export const login = async (email, password) => {
     const {data} = await $host.post('api/user/login', {email, password})
+    localStorage.removeItem('token')
     localStorage.setItem('token', data.token)
-    console.log(localStorage.getItem('token'))
     return jwt_decode(data.token)
 }
 
@@ -28,6 +29,7 @@ export const update = async (data_up) =>{
 
 export const check = async () => {
     const {data} = await $authHost.get('api/user/auth' )
+    localStorage.removeItem("token")
     localStorage.setItem('token', data.token)
     return jwt_decode(data.token)
 }

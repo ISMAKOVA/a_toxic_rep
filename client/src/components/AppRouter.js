@@ -3,13 +3,14 @@ import {Switch, Route, Redirect} from 'react-router-dom';
 import {authRoutes, publicRoutes} from "../routes";
 import {LOGIN_ROUTE} from "../utils/consts";
 import {Context} from "../index";
+import {observer} from "mobx-react-lite";
 
-const AppRouter = () => {
+const AppRouter = observer(() => {
     const {user} = useContext(Context)
-    console.log(user)
     return (
 
         <Switch>
+            {console.log(user.isAuth)}
             {user.isAuth && authRoutes.map(({path, Component})=>
                 <Route key={path} path={path} component={Component} exact/>
             )}
@@ -20,6 +21,6 @@ const AppRouter = () => {
             <Redirect to={LOGIN_ROUTE}/>
         </Switch>
     );
-};
+});
 
 export default AppRouter;
