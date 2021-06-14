@@ -8,19 +8,22 @@ import {Link} from "react-router-dom";
 
 const UserPage = observer(() => {
     const storedToken = localStorage.getItem("token");
+    console.log(jwt_decode(storedToken))
     if (storedToken) {
         let decodedData = jwt_decode(storedToken, {header: true});
         let expirationDate = decodedData.exp;
         let current_time = Date.now() / 1000;
         if (expirationDate < current_time) {
+            console.log("remove")
             localStorage.removeItem("token");
         }
     }
 
     useEffect(() => {
-        fetchOneUser(parseInt(storedToken.id)).then(data =>setEmail(data.email))
-        fetchOneUser(parseInt(storedToken.id)).then(data =>setUsername(data.username))
-
+        if (storedToken) {
+            fetchOneUser(parseInt(jwt_decode(storedToken).id)).then(data => setEmail(data.email))
+            fetchOneUser(parseInt(jwt_decode(storedToken).id)).then(data => setUsername(data.username))
+        }
     }, [])
 
 
@@ -129,14 +132,7 @@ const UserPage = observer(() => {
                                 <Card>
                                     <Card.Body>
                                         <Scrollbars style={{width: "auto", height: "44vh"}}>
-                                            <p><Link>Группа</Link></p>
-                                            <p><Link>Группа</Link></p> <p><Link>Группа</Link></p> <p><Link>Группа</Link>
-                                        </p> <p><Link>Группа</Link></p> <p><Link>Группа</Link></p> <p>
-                                            <Link>Группа</Link></p> <p><Link>Группа</Link></p> <p><Link>Группа</Link>
-                                        </p> <p><Link>Группа</Link></p> <p><Link>Группа</Link></p> <p>
-                                            <Link>Группа</Link></p> <p><Link>Группа</Link></p> <p><Link>Группа</Link>
-                                        </p> <p><Link>Группа</Link></p> <p><Link>Группа</Link></p> <p>
-                                            <Link>Группа</Link></p>
+                                            <p><Link to="#">Группа</Link></p>
 
 
                                         </Scrollbars>

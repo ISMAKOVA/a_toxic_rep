@@ -66,10 +66,10 @@ class UserController {
 
     async getOne(req, res){
         const {id} = req.params
-        const gamer = await Users.findOne(
+        const user = await Users.findOne(
             {where: {id}},
         )
-        return res.json(gamer)
+        return res.json(user)
     }
 
     async update(req, res, next){

@@ -33,19 +33,19 @@ const MainPage = () => {
                     <h2 className="my-3">Сообщества</h2>
                     <Carousel responsive={responsive}>
                         <div className="m-4">
-                            <div className="res-circle "><Link className="circle-txt mt-4">Журнал КОД</Link></div>
+                            <div className="res-circle "><Link to="#" className="circle-txt mt-4">Журнал КОД</Link></div>
                         </div>
                         <div className="m-4">
-                            <div className="res-circle"><Link className="circle-txt">Item 2</Link></div>
+                            <div className="res-circle"><Link to="#" className="circle-txt">Item 2</Link></div>
                         </div>
                         <div className="m-4">
-                            <div className="res-circle"><Link className="circle-txt">Item 3</Link></div>
+                            <div className="res-circle"><Link to="#" className="circle-txt">Item 3</Link></div>
                         </div>
                         <div className="m-4">
-                            <div className="res-circle"><Link className="circle-txt">Item 4</Link></div>
+                            <div className="res-circle"><Link to="#" className="circle-txt">Item 4</Link></div>
                         </div>
                         <div className="m-4">
-                            <div className="res-circle"><Link className="circle-txt">Item 5</Link></div>
+                            <div className="res-circle"><Link to="#" className="circle-txt">Item 5</Link></div>
                         </div>
 
                     </Carousel>

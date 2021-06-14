@@ -32,8 +32,8 @@ function Footer() {
                 <div className="d-flex justify-content-between container">
                     <p className="small-text"> &copy; {new Date().getFullYear()} Ismakova</p>
                     <div className="d-inline-flex">
-                        <Link className="pr-2 small-text" href="https://vk.com/ismakova">Вконтакте</Link>
-                        <Link className="small-text" href="https://www.instagram.com/ismaakova/?hl=ru">Instagram</Link>
+                        <Link className="pr-2 small-text" to="https://vk.com/ismakova" href="https://vk.com/ismakova">Вконтакте</Link>
+                        <Link className="small-text" to ="https://www.instagram.com/ismaakova/?hl=ru" href="https://www.instagram.com/ismaakova/?hl=ru">Instagram</Link>
                     </div>
 
                 </div>
