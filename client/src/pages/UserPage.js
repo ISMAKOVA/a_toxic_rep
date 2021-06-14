@@ -3,12 +3,11 @@ import {Button, Card, Col, Container, Form, FormControl, Nav, Row, Tab} from "re
 import {Scrollbars} from 'rc-scrollbars';
 import jwt_decode from "jwt-decode";
 import {observer} from "mobx-react-lite";
-import {fetchOneUser} from "../http/user_api";
+import {fetchOneUser, update} from "../http/user_api";
 import {Link} from "react-router-dom";
 
 const UserPage = observer(() => {
     const storedToken = localStorage.getItem("token");
-    console.log(jwt_decode(storedToken))
     if (storedToken) {
         let decodedData = jwt_decode(storedToken, {header: true});
         let expirationDate = decodedData.exp;
@@ -26,16 +25,29 @@ const UserPage = observer(() => {
         }
     }, [])
 
-
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState(undefined)
+    const [password, setPassword] = useState(undefined)
+    const [username, setUsername] = useState(undefined)
     const [file, setFile] = useState(null)
     const fileInput = useRef(null)
     const isSearch = false;
     const selectFile = e => {
         setFile(e.target.files[0])
     }
+    const Update = async () => {
+        const formData = new FormData()
+        formData.append('id', parseInt(jwt_decode(storedToken).id))
+        formData.append('email', email)
+        formData.append('username', username)
+        formData.append('avatar', file)
+        formData.append('password', password)
+        for (const key of formData.entries()) {
+            console.log(key[0] + ', ' + key[1])
+        }
+        update(formData).then()
+        alert("Данные обновлены");
+    }
+
     return (
         <Container>
             <Tab.Container id="" defaultActiveKey="first">
@@ -53,7 +65,7 @@ const UserPage = observer(() => {
                     <Col sm={9}>
                         <Tab.Content>
                             <Tab.Pane eventKey="first">
-                                <Form>
+                                <Form  encType="multipart/form-data">
                                     <Form.Group as={Row}>
                                         <Form.Label column sm="2">Почта</Form.Label>
                                         <Col sm="10">
@@ -109,8 +121,8 @@ const UserPage = observer(() => {
                                     </Form.Group>
 
 
-                                    <Button variant="primary" type="submit">
-                                        Сохранить
+                                    <Button variant="primary" onClick={Update}>
+                                        Обновить
                                     </Button>
                                 </Form>
                             </Tab.Pane>

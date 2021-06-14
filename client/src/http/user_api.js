@@ -33,12 +33,12 @@ export const login = async (email, password) => {
 }
 
 export const update = async (data_up) => {
-    console.log(data_up)
     const token = localStorage.getItem('token')
     console.log(token)
-    const {data} = await $host.put('api/user/', data_up, {
+    const {data} = await $host.post('api/user/update', data_up, {
         headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': `multipart/form-data;`,
         }
     })
     return jwt_decode(data.token)
