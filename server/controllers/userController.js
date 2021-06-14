@@ -75,35 +75,36 @@ class UserController {
 
     async update(req, res, next) {
         let {id, username, email, password} = req.body
-        // const id = req.user.id;
-        const {avatar} = req.files
-        let fileName = uuid.v4() + ".jpg"
-        await avatar.mv(path.resolve(__dirname, '..', 'static', fileName))
+        let fileName;
         const cur_user = await Users.findOne({where: {id}});
+        if(req.files){
+            let {avatar} = req.files
+            fileName = uuid.v4() + ".jpg";
+            await avatar.mv(path.resolve(__dirname, '..', 'static', fileName));
+        }else {
+            fileName = cur_user.avatar;
+        }
 
         if (email === undefined || email === "") {
             email = cur_user.email;
         } else {
-            const candidate1 = await Users.findOne({where: {email}})
-            if (candidate1 && parseInt(candidate1.id) !== parseInt(id)) {
+            const user_email = await Users.findOne({where: {email}})
+            if (user_email && parseInt(user_email.id) !== parseInt(id)) {
                 return next(ApiError.badRequest('Пользователь с таким email или username уже существует'))
             }
         }
-        if (fileName == null || fileName === "" || fileName === ".jpg") {
-            fileName = cur_user.avatar;
-        }
 
-        if (!username || username === "") {
+        if (!username || username === "" || username ===  "undefined") {
             username = cur_user.username;
         } else {
-            const candidate2 = await Users.findOne({where: {username}})
-            if (candidate2 && parseInt(candidate2.id) !== parseInt(id)) {
+            const user_username = await Users.findOne({where: {username}})
+            if (user_username && parseInt(user_username.id) !== parseInt(id)) {
                 return next(ApiError.badRequest('Пользователь с таким email или username уже существует'))
             }
         }
 
         let hashPassword;
-        if (!password || password === "" || password === undefined) {
+        if (!password || password === "" || password === "undefined") {
             hashPassword = cur_user.password;
         } else {
             hashPassword = await bcrypt.hash(password, 5);
@@ -112,7 +113,7 @@ class UserController {
         const user = await (await (Users.findOne(
             {where: {id}},
         ))).update({username: username, email: email, password: hashPassword, avatar: fileName},)
-        const token = generateJwt1(id, username, email, avatar, fileName)
+        const token = generateJwt1(id, username, email, fileName)
         return res.json({token, password})
     }
 

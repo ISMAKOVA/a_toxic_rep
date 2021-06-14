@@ -18,7 +18,7 @@ const AppRouter = observer(() => {
             {publicRoutes.map(({path, Component})=>
                 <Route key={path} path={path} component={Component} exact/>
             )}
-            <Redirect to={LOGIN_ROUTE}/>
+            {/*<Redirect to={LOGIN_ROUTE}/>*/}
         </Switch>
     );
 });

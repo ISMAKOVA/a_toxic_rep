@@ -58,8 +58,8 @@ const Auth = observer(() => {
                 history.push(MAIN_ROUTE)
             }
         } catch (e) {
-            // history.push(LOGIN_ROUTE)
-            return alert(e.response.data.message)
+            history.push(LOGIN_ROUTE)
+            return alert(e.message)
         }
 
     }
