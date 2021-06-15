@@ -1,9 +1,16 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import {Card, Col, Container, Row} from "react-bootstrap";
 import {Link, useLocation} from "react-router-dom";
 import {LOGIN_ROUTE} from "../utils/consts";
+import {fetchOneUser} from "../http/user_api";
+import jwt_decode from "jwt-decode";
+import {fetchAllUserGroups} from "../http/groups_api";
+import {fetchAllUserUsers} from "../http/users_api";
+import {Scrollbars} from "rc-scrollbars";
+import {observer} from "mobx-react-lite";
+
 
 const responsive = {
     superLargeDesktop: {
@@ -24,7 +31,26 @@ const responsive = {
     }
 };
 
-const MainPage = () => {
+
+const MainPage = observer(() => {
+
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) {
+        let decodedData = jwt_decode(storedToken, {header: true});
+        let expirationDate = decodedData.exp;
+        let current_time = Date.now() / 1000;
+        if (expirationDate < current_time) {
+            console.log("remove")
+            localStorage.removeItem("token");
+        }
+    }
+    const [favoriteGroups, setFavoriteGroups] = useState(undefined)
+
+    useEffect(() => {
+        if (storedToken) {
+            fetchAllUserGroups(parseInt(jwt_decode(storedToken).id)).then(data => setFavoriteGroups(data))
+        }
+    }, [])
 
     return (
         <Container className="">
@@ -32,21 +58,17 @@ const MainPage = () => {
                 <Col>
                     <h2 className="my-3">Сообщества</h2>
                     <Carousel responsive={responsive}>
-                        <div className="m-4">
-                            <div className="res-circle "><Link to="#" className="circle-txt mt-4">Журнал КОД</Link></div>
-                        </div>
-                        <div className="m-4">
-                            <div className="res-circle"><Link to="#" className="circle-txt">Item 2</Link></div>
-                        </div>
-                        <div className="m-4">
-                            <div className="res-circle"><Link to="#" className="circle-txt">Item 3</Link></div>
-                        </div>
-                        <div className="m-4">
-                            <div className="res-circle"><Link to="#" className="circle-txt">Item 4</Link></div>
-                        </div>
-                        <div className="m-4">
-                            <div className="res-circle"><Link to="#" className="circle-txt">Item 5</Link></div>
-                        </div>
+                        {favoriteGroups ?
+                            favoriteGroups.map((item) =>
+                                <div className="m-4">
+                                    <Link to={'https://vk.com/' + item.id} className="mt-4"><img
+                                        src={item.avatar} width={80} height={80} alt="pic" className="round_img"/>
+                                    </Link>
+
+                                </div>
+                            ) : <div></div>
+
+                        }
 
                     </Carousel>
                 </Col>
@@ -58,6 +80,6 @@ const MainPage = () => {
             </Row>
         </Container>
     );
-};
+});
 
 export default MainPage;

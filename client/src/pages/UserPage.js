@@ -27,9 +27,7 @@ const UserPage = observer(() => {
             fetchOneUser(parseInt(jwt_decode(storedToken).id)).then(data => setUsername(data.username))
             fetchAllUserGroups(parseInt(jwt_decode(storedToken).id)).then(data => setFavoriteGroups(data))
             fetchAllUserUsers(parseInt(jwt_decode(storedToken).id)).then(data => setFavoriteUsers(data))
-
         }
-
     }, [])
     //this data for update
     const [email, setEmail] = useState(undefined)
