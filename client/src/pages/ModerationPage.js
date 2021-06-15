@@ -6,7 +6,7 @@ const ModerationPage = () => {
 
     return (
         <Container>
-            <Row className="my-3">
+            <Row className="my-4">
                 <Col>
                     <Form inline>
                         <FormControl type="text" placeholder="Введите уникальное имя сообщества" className=" mr-sm-2" style={{width:"50%"}} />
@@ -17,29 +17,26 @@ const ModerationPage = () => {
 
             <h3 className="my-3">Комментарии</h3>
             <Row className="my-3">
-                <Col>
-                    <DropdownButton id="dropdown-basic-button" title="Период">
+                <Col sm={3}>
+                    <DropdownButton id="dropdown-basic-button" title="Период" className="my-3">
                         <Dropdown.Item href="#/action-1">За день</Dropdown.Item>
                         <Dropdown.Item href="#/action-2">За неделю</Dropdown.Item>
                         <Dropdown.Item href="#/action-3">За месяц</Dropdown.Item>
                     </DropdownButton>
-                </Col>
-                <Col>
-                    <DropdownButton id="dropdown-basic-button" title="Dropdown button">
+
+                    <DropdownButton id="dropdown-basic-button" title="Dropdown button" className="my-3">
+                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
+                        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                    </DropdownButton>
+
+                    <DropdownButton id="dropdown-basic-button" title="Dropdown button" className="my-3">
                         <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
                         <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                         <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                     </DropdownButton>
                 </Col>
-                <Col>
-                    <DropdownButton id="dropdown-basic-button" title="Dropdown button">
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                    </DropdownButton>
-                </Col>
-            </Row>
-            <Row>
+
                 <Col>
                     <ModerationTable
                         comments={[
@@ -54,7 +51,7 @@ const ModerationPage = () => {
                     />
                 </Col>
             </Row>
-            Moderation
+
         </Container>
     );
 };

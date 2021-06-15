@@ -66,7 +66,7 @@ const MainPage = observer(() => {
                                     </Link>
 
                                 </div>
-                            ) : <div></div>
+                            ) : <div> </div>
 
                         }
 
