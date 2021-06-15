@@ -6,6 +6,7 @@ import {observer} from "mobx-react-lite";
 import {fetchOneUser, update} from "../http/user_api";
 import {Link} from "react-router-dom";
 import {createGroupVK, fetchAllUserGroups, fetchOneGroupFromVK} from "../http/groups_api";
+import {createUserVK, fetchAllUserUsers, fetchOneUserFromVK} from "../http/users_api";
 
 const UserPage = observer(() => {
     //get token of current user
@@ -24,8 +25,9 @@ const UserPage = observer(() => {
         if (storedToken) {
             fetchOneUser(parseInt(jwt_decode(storedToken).id)).then(data => setEmail(data.email))
             fetchOneUser(parseInt(jwt_decode(storedToken).id)).then(data => setUsername(data.username))
-            // fetchAllUserGroups(parseInt(jwt_decode(storedToken).id)).then(data => setFavoriteGroups(data.info))
-            // console.log(favoriteGroups)
+            fetchAllUserGroups(parseInt(jwt_decode(storedToken).id)).then(data => setFavoriteGroups(data))
+            fetchAllUserUsers(parseInt(jwt_decode(storedToken).id)).then(data => setFavoriteUsers(data))
+
         }
 
     }, [])
@@ -38,15 +40,21 @@ const UserPage = observer(() => {
 
     // this data to add new group
     const [groupId, setGroupId] = useState(undefined)
-    console.log(groupId)
-    const [groupInfo, setGroupInfo] = useState(undefined)
     const [groupNumId, setGroupNumId] = useState(undefined)
     const [groupName, setGroupName] = useState(undefined)
     const [groupDescription, setGroupDescription] = useState(undefined)
     const [groupPic, setGroupPic] = useState(undefined)
     const [groupPrivacy, setPrivacy] = useState(undefined)
+    const [favoriteGroups, setFavoriteGroups] = useState(undefined)
 
-    // const [favoriteGroups, setFavoriteGroups] = useState(undefined)
+    // this data to add new user
+    const [userId, setUserId] = useState(undefined)
+    const [userNumId, setUserNumId] = useState(undefined)
+    const [userUsername, setUserUsername] = useState(undefined)
+    const [userPrivacy, setUserPrivacy] = useState(undefined)
+    const [userAvatar, setUserAvatar] = useState(undefined)
+    const [favoriteUsers, setFavoriteUsers] = useState(undefined)
+
     const selectFile = e => {
         setFile(e.target.files[0])
     }
@@ -57,24 +65,39 @@ const UserPage = observer(() => {
         formData.append('username', username)
         formData.append('avatar', file)
         formData.append('password', password)
-        for (const key of formData.entries()) {
-            console.log(key[0] + ', ' + key[1])
-        }
+        // for (const key of formData.entries()) {
+        //     console.log(key[0] + ', ' + key[1])
+        // }
         update(formData).then()
         alert("Данные обновлены");
     }
-
-    const GetGroup = async () => {
-        fetchOneGroupFromVK(groupId).then(data => setGroupInfo(data['groups']['0']))
-        if (groupInfo !== undefined) {
-            setGroupNumId(groupInfo['id'])
-            setGroupName(groupInfo['name'])
-            setGroupDescription(groupInfo['description'])
-            setGroupPic(groupInfo['photo_200'])
-            setPrivacy(groupInfo['is_closed'])
+    const [showUser, setShowUser] = useState(false)
+    const GetUser = async () => {
+        if(userId!==undefined) {
+            fetchOneUserFromVK(userId).then(data => setUserNumId(data['users'][0]['id']))
+            fetchOneUserFromVK(userId).then(data => setUserUsername(data['users'][0]['first_name'] + ' ' + data['users'][0]['last_name']))
+            fetchOneUserFromVK(userId).then(data => setUserPrivacy(data['users'][0]['is_closed']))
+            fetchOneUserFromVK(userId).then(data => setUserAvatar(data['users'][0]['photo_200']))
+            setShowUser(true)
         }
-    }
 
+    }
+    const [showGroup, setShowGroup] = useState(false)
+    const GetGroup = async () => {
+        if(groupId!==undefined) {
+            fetchOneGroupFromVK(groupId).then(data => setGroupNumId(data['groups']['0']['id']))
+            fetchOneGroupFromVK(groupId).then(data => setGroupName(data['groups']['0']['name']))
+            fetchOneGroupFromVK(groupId).then(data => setGroupDescription(data['groups']['0']['description']))
+            fetchOneGroupFromVK(groupId).then(data => setGroupPic(data['groups']['0']['photo_200']))
+            fetchOneGroupFromVK(groupId).then(data => setPrivacy(data['groups']['0']['is_closed']))
+            setShowGroup(true)
+        }
+
+    }
+    const AddUserToUser = async () => {
+        createUserVK(userNumId, userUsername, userPrivacy, userAvatar, parseInt(jwt_decode(storedToken).id)).then()
+        alert("User has been added")
+    }
     const AddGroupToUser = async () => {
         createGroupVK(groupNumId, groupName, groupPrivacy, groupPic, parseInt(jwt_decode(storedToken).id)).then()
         alert("Group has been added")
@@ -90,7 +113,10 @@ const UserPage = observer(() => {
                                 <Nav.Link eventKey="first" className="neo-nav-item">Профиль</Nav.Link>
                             </Nav.Item>
                             <Nav.Item>
-                                <Nav.Link eventKey="second" className="neo-nav-item">Избранное</Nav.Link>
+                                <Nav.Link eventKey="second" className="neo-nav-item">Сообщества</Nav.Link>
+                            </Nav.Item>
+                            <Nav.Item>
+                                <Nav.Link eventKey="third" className="neo-nav-item">Пользователи</Nav.Link>
                             </Nav.Item>
                         </Nav>
                     </Col>
@@ -170,11 +196,12 @@ const UserPage = observer(() => {
                                             <Button className="" onClick={GetGroup} type="button">Поиск</Button>
 
                                         </Form>
-                                        {groupInfo !== undefined && groupId !== undefined ?
+                                        {showGroup ?
                                             <Card className="my-4 box-shadow-card">
                                                 <Card.Body className="">
                                                     <Row>
-                                                        <Col className="ml-2" sm={4}><img src={groupPic} alt="pic"
+                                                        <Col className="ml-2" sm={4}><img className="round_img"
+                                                                                          src={groupPic} alt="pic"
                                                                                           width={200}
                                                                                           height={200}/></Col>
                                                         <Col sm={6}>
@@ -185,8 +212,9 @@ const UserPage = observer(() => {
                                                     </Row>
                                                     {groupName !== "Группа Закрыта" ?
                                                         <Row className="justify-content-end"><Col sm={4}>
-                                                            <Button className="ml-4"
-                                                                    type="button" onClick={AddGroupToUser}>Добавить</Button></Col></Row> : ""}
+                                                            <Button className="ml-4 mt-3"
+                                                                    type="button"
+                                                                    onClick={AddGroupToUser}>Добавить</Button></Col></Row> : ""}
 
 
                                                 </Card.Body>
@@ -199,8 +227,75 @@ const UserPage = observer(() => {
                                     <Card.Body>
                                         <Form.Label className="h5">Добавленные сообщества</Form.Label>
                                         <Scrollbars style={{width: "auto", height: "44vh"}}>
+                                            {favoriteGroups ?
+                                                favoriteGroups.map((group) =>
+                                                    <p className="ml-3"><img className="mr-3 round_img"
+                                                                             src={group.avatar} width={30} height={30}
+                                                                             alt="pic"/><Link
+                                                        to={'https://vk.com/' + group.id}>{group.info}</Link></p>
+                                                ) : ""
 
-                                            <p><Link to="#">Группа</Link></p>
+                                            }
+
+
+                                        </Scrollbars>
+                                    </Card.Body>
+                                </Card>
+
+                            </Tab.Pane>
+                            <Tab.Pane eventKey="third">
+                                <Card className="small my-4">
+                                    <Card.Body>
+                                        <Form.Label className="h5">Добавить нового пользователя</Form.Label>
+                                        <Form inline className="my-3">
+                                            <Form.Control type="text" placeholder="Введите id пользователя"
+                                                          value={userId}
+                                                          onChange={e => setUserId(e.target.value)}
+                                                          className=" mr-sm-2" style={{width: "50%"}}/>
+                                            <Button className="" onClick={GetUser} type="button">Поиск</Button>
+
+                                        </Form>
+                                        {showUser?
+                                            <Card className="my-4 box-shadow-card">
+                                                <Card.Body className="">
+                                                    <Row>
+                                                        <Col className="ml-2" sm={4}><img className="round_img"
+                                                                                          src={userAvatar} alt="pic"
+                                                                                          width={200}
+                                                                                          height={200}/></Col>
+                                                        <Col sm={6}>
+                                                            <h5>{userUsername}</h5>
+                                                            <p>Профиль: {userPrivacy === 0 ? 'закрытый' : 'открытый'} {userPrivacy} </p>
+                                                            <p>VK Id : {userNumId} </p>
+                                                        </Col>
+
+                                                    </Row>
+                                                    {groupName !== "Группа Закрыта" ?
+                                                        <Row className="justify-content-end"><Col sm={4}>
+                                                            <Button className="ml-4 mt-3"
+                                                                    type="button"
+                                                                    onClick={AddUserToUser}>Добавить</Button></Col></Row> : ""}
+
+
+                                                </Card.Body>
+                                            </Card>
+
+                                            : ""}
+                                    </Card.Body>
+                                </Card>
+                                <Card className="my-4 box-shadow-card">
+                                    <Card.Body>
+                                        <Form.Label className="h5">Добавленные пользователи</Form.Label>
+                                        <Scrollbars style={{width: "auto", height: "44vh"}}>
+                                            {favoriteUsers ?
+                                                favoriteUsers.map((user) =>
+                                                    <p className="ml-3"><img className="mr-3 round_img"
+                                                                             src={user.avatar} width={30} height={30}
+                                                                             alt="pic"/><Link
+                                                        to={'https://vk.com/' + user.id}>{user.username}</Link></p>
+                                                ) : ""
+
+                                            }
 
 
                                         </Scrollbars>

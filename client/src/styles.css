@@ -207,6 +207,13 @@ input[type="file"] {
     background: rgb(197,144,239);
     background: linear-gradient(196deg, rgba(197,144,239,1) 0%, rgba(116,95,242,1) 100%);
 }
+.round_img{
+    border-radius: 50%;
+    margin-left: 20px;
+    box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #FFFFFF;
+    background: rgb(197,144,239);
+    background: linear-gradient(196deg, rgba(197,144,239,1) 0%, rgba(116,95,242,1) 100%);
+}
 
 .neo-nav a[aria-selected="true"]{
     background: #F0F0F3;

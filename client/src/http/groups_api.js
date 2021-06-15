@@ -12,7 +12,7 @@ export const fetchAllGroups = async () => {
 }
 
 export const fetchAllUserGroups = async (id) => {
-    const {data} = await $host.get('api/groupVK/' + id+'byUser')
+    const {data} = await $host.get('api/groupVK/' + id+'/byUser')
     return data
 }
 
