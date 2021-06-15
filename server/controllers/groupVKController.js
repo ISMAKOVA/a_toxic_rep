@@ -2,6 +2,7 @@ const {Groups_VK} = require('../models/models')
 const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const path = require('path')
+const axios = require('axios')
 
 
 class GroupVKController {
@@ -19,14 +20,19 @@ class GroupVKController {
         return res.json(groupVK)
     }
 
+    async getAllByUserId(req, res) {
+        const {id} = req.params
+        const groupVK = await Groups_VK.findAll({
+            where: {userId:id}
+        })
+        return res.json(groupVK)
+    }
+
     async create(req, res, next) {
         try {
-            const {id, info, privacy, favoriteGroupId, userId} = req.body
-            const {avatar} = req.files
-            let fileName = uuid.v4() + ".jpg"
-            await avatar.mv(path.resolve(__dirname, '..', 'static', fileName))
+            const {id, info, privacy, avatar, userId} = req.body
             const groupVK = await Groups_VK.create({
-                id, info, privacy, favoriteGroupId, userId, avatar: fileName
+                id, info, avatar, privacy, userId
             })
             return res.json(groupVK)
 
@@ -49,15 +55,28 @@ class GroupVKController {
 
     async update(req, res, next) {
         try {
-            const {id, info, avatar, privacy, favoriteGroupId, userId} = req.body
+            const {id, info, avatar, privacy,  userId} = req.body
             const groupVK = (await Groups_VK.findOne({
                 where: {id}
-            })).update({info: info, avatar: avatar, privacy: privacy, favoriteGroupId: favoriteGroupId, userId: userId})
+            })).update({info: info, avatar: avatar, privacy: privacy,  userId: userId})
             return res.json(groupVK)
         } catch (e) {
             next(ApiError.badRequest(e.message))
         }
     }
+
+    async getGroupVK(req, res, next) {
+        try {
+            const id = req.params.id
+            await axios.get(process.env.TOXIC_API_PORT+'toxicity_py/api/groups/'+id).then(response => {
+                return res.send(response.data)
+            });
+
+        } catch (e) {
+            next(ApiError.badRequest((e.message)))
+        }
+    }
+
 }
 
 module.exports = new GroupVKController()

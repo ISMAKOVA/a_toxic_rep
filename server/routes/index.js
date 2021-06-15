@@ -23,6 +23,5 @@ router.use('/postVK', postVK)
 router.use('/subscribers', subscribers)
 router.use('/toxicityTypes', toxicityTypes)
 
-
 module.exports = router
 

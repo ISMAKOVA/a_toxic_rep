@@ -44,16 +44,20 @@ export const update = async (data_up) => {
     return jwt_decode(data.token)
 }
 
-export const check = async () => {
+export const check = async  () => {
     try {
-        const {data} = await $authHost.get('api/user/auth')
-        // localStorage.removeItem("token")
-        localStorage.setItem('token', data.token)
+        const token = localStorage.getItem('token')
+        const {data} = await $authHost.get('api/user/auth',{
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }});
+        localStorage.setItem('token', data.token);
         return jwt_decode(data.token)
-    } catch (e) {
-       return null
     }
-}
+    catch (e) {
+        return null
+    }
+};
 
 export const fetchOneUser = async (id) => {
     const {data} = await $host.get('api/user/' + id)

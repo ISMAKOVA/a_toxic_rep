@@ -3,7 +3,7 @@ const router = new Router()
 const favoriteGroupsController = require('../controllers/favoriteGroupsController')
 
 router.get('/', favoriteGroupsController.getAll)
-router.get('/:id', favoriteGroupsController.getOne)
+router.get('/:id', favoriteGroupsController.getAllUserGroups)
 router.post('/', favoriteGroupsController.create)
 router.delete('/:id', favoriteGroupsController.delete)
 router.put('/:id', favoriteGroupsController.update)

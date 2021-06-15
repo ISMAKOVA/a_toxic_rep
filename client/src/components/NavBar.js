@@ -28,7 +28,7 @@ const NavBar = observer(() => {
     }
     const [avatar, setAvatar] = useState('')
     if (storedToken) {
-        fetchOneUser(parseInt(jwt_decode(storedToken).id)).then(data => setAvatar(data.avatar))
+        fetchOneUser(parseInt(jwt_decode(storedToken).id)).then(data => data!==null? setAvatar(data.avatar): "")
     }
 
     return (

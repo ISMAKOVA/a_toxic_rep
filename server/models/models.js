@@ -88,8 +88,9 @@ Users_VK.belongsTo(Users);
 Users.hasMany(Favorite_groups);
 Favorite_groups.belongsTo(Users);
 
-Favorite_groups.hasMany(Groups_VK);
-Groups_VK.belongsTo(Favorite_groups);
+
+Groups_VK.hasMany(Favorite_groups);
+Favorite_groups.belongsTo(Groups_VK);
 
 Users.hasMany(Groups_VK);
 Groups_VK.belongsTo(Users);

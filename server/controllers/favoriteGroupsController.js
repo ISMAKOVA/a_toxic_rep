@@ -7,10 +7,10 @@ class FavoriteGroupsController {
         return res.json(favorite_groups)
     }
 
-    async getOne(req, res) {
+    async getAllUserGroups(req, res) {
         const {id} = req.params
-        const favorite_groups = await Favorite_groups.findOne({
-            where: {id}
+        const favorite_groups = await Favorite_groups.findAll({
+            where: {userId:id}
         })
         return res.json(favorite_groups)
     }

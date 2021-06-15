@@ -172,18 +172,21 @@ input[type="file"] {
 
 .card-body{
     width: 100%;
-    height: 50vh;
+    height: auto;
     border-radius: 30px;
     border: none;
     background: #F0F0F3;
-    box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #FFFFFF;
+
 }
 .card, .card-header, .card-body, .card-footer{
     border-radius:30px !important;
     border: none;
 }
 .small{
-    height: 20vh;
+    min-height: 20vh;
+}
+.box-shadow-card{
+    box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #FFFFFF;
 }
 .avatar{
     width: 60px;
