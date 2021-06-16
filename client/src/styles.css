@@ -32,6 +32,7 @@ body{
     color: #C590EF;
 }
 
+
 a{
     color: #728AB7 !important;
     text-decoration: none;
@@ -149,7 +150,7 @@ input[type="file"] {
     width: 30%;
     border-radius: 50%;
     background: #F0F0F3;
-    box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #FFFFFF;
+    box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #F0F0F3;
     line-height: 0;
     position: relative;
 }
@@ -186,7 +187,14 @@ input[type="file"] {
     min-height: 20vh;
 }
 .box-shadow-card{
-    box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #FFFFFF;
+    box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #F0F0F3;
+}
+.border-card{
+    border: 1px solid rgba(174, 174, 192, 0.1);
+}
+.border-card:hover{
+    border: none;
+    box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #F0F0F3;
 }
 .avatar{
     width: 60px;

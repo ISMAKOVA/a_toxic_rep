@@ -44,6 +44,7 @@ const UserPage = observer(() => {
     const [groupPic, setGroupPic] = useState(undefined)
     const [groupPrivacy, setPrivacy] = useState(undefined)
     const [favoriteGroups, setFavoriteGroups] = useState(undefined)
+    const [groupScreenName, setGroupScreenName] = useState(undefined)
 
     // this data to add new user
     const [userId, setUserId] = useState(undefined)
@@ -88,6 +89,7 @@ const UserPage = observer(() => {
             fetchOneGroupFromVK(groupId).then(data => setGroupDescription(data['groups']['0']['description']))
             fetchOneGroupFromVK(groupId).then(data => setGroupPic(data['groups']['0']['photo_200']))
             fetchOneGroupFromVK(groupId).then(data => setPrivacy(data['groups']['0']['is_closed']))
+            fetchOneGroupFromVK(groupId).then(data => setGroupScreenName(data['groups']['0']['screen_name']))
             setShowGroup(true)
         }
 
@@ -97,7 +99,7 @@ const UserPage = observer(() => {
         alert("User has been added")
     }
     const AddGroupToUser = async () => {
-        createGroupVK(groupNumId, groupName, groupPrivacy, groupPic, parseInt(jwt_decode(storedToken).id)).then()
+        createGroupVK(groupNumId, groupName, groupPrivacy, groupScreenName, groupPic, parseInt(jwt_decode(storedToken).id)).then()
         alert("Group has been added")
     }
 
@@ -205,6 +207,7 @@ const UserPage = observer(() => {
                                                         <Col sm={6}>
                                                             <h5>{groupName}</h5>
                                                             <div>{groupDescription}</div>
+                                                            <div>ВК название: {groupScreenName}</div>
                                                         </Col>
 
                                                     </Row>
@@ -264,7 +267,7 @@ const UserPage = observer(() => {
                                                         <Col sm={6}>
                                                             <h5>{userUsername}</h5>
                                                             <p>Профиль: {userPrivacy === 0 ? 'закрытый' : 'открытый'} {userPrivacy} </p>
-                                                            <p>VK Id : {userNumId} </p>
+                                                            <p>ВК Id: {userNumId} </p>
                                                         </Col>
 
                                                     </Row>

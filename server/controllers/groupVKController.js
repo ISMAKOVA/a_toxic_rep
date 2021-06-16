@@ -30,9 +30,9 @@ class GroupVKController {
 
     async create(req, res, next) {
         try {
-            const {id, info, privacy, avatar, userId} = req.body
+            const {id, info, privacy, screen_name, avatar, userId} = req.body
             const groupVK = await Groups_VK.create({
-                id, info, avatar, privacy, userId
+                id, info, avatar, privacy,screen_name, userId
             })
             return res.json(groupVK)
 
@@ -55,10 +55,10 @@ class GroupVKController {
 
     async update(req, res, next) {
         try {
-            const {id, info, avatar, privacy,  userId} = req.body
+            const {id, info, privacy, screen_name, avatar, userId} = req.body
             const groupVK = (await Groups_VK.findOne({
                 where: {id}
-            })).update({info: info, avatar: avatar, privacy: privacy,  userId: userId})
+            })).update({info: info, avatar: avatar, privacy: privacy,screen_name:screen_name,  userId: userId})
             return res.json(groupVK)
         } catch (e) {
             next(ApiError.badRequest(e.message))

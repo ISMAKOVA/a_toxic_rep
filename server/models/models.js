@@ -21,7 +21,8 @@ const Users_VK =  sequelize.define('user_vk',{
 const Groups_VK =  sequelize.define('group_vk',{
     id: {type: DataTypes.INTEGER, primaryKey: true},
     // wall_id: {type: DataTypes.INTEGER, unique: true},
-    info: {type: DataTypes.STRING, unique: true},
+    screen_name:{type: DataTypes.STRING, unique: true},
+    info: {type: DataTypes.STRING, unique:false},
     avatar:{type: DataTypes.STRING, unique: false, },
     privacy: {type: DataTypes.BOOLEAN},
     // toxicity_id: {type: DataTypes.INTEGER}
@@ -101,20 +102,20 @@ Friends_connection.belongsTo(Users_VK);
 Users_VK.hasMany(Subscribers);
 Subscribers.belongsTo(Users_VK);
 
-Toxicity_types.hasMany(Users_VK);
-Users_VK.belongsTo(Toxicity_types);
+Users_VK.hasMany(Toxicity_types);
+Toxicity_types.belongsTo(Users_VK);
 
 Groups_VK.hasMany(Subscribers);
 Subscribers.belongsTo(Groups_VK);
 
-Toxicity_types.hasMany(Groups_VK);
-Groups_VK.belongsTo(Toxicity_types);
+Groups_VK.hasMany(Toxicity_types);
+Toxicity_types.belongsTo(Groups_VK);
 
-Toxicity_types.hasMany(Posts_VK);
-Posts_VK.belongsTo(Toxicity_types);
+Posts_VK.hasMany(Toxicity_types);
+Toxicity_types.belongsTo(Posts_VK);
 
-Toxicity_types.hasMany(Comments_VK);
-Comments_VK.belongsTo(Toxicity_types);
+Comments_VK.hasMany(Toxicity_types);
+Toxicity_types.belongsTo(Comments_VK);
 
 Users_VK.hasMany(Posts_VK);
 Posts_VK.belongsTo(Users_VK);
