@@ -10,7 +10,7 @@ import {Spinner} from "react-bootstrap";
 
 const App = observer(() => {
     const {user} = useContext(Context)
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(true)
 
     useEffect(() => {
         check().then(data => {
