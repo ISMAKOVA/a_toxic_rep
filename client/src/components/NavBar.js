@@ -37,7 +37,7 @@ const NavBar = observer(() => {
                 <Navbar.Brand as={Link} to={isLogin ? LOGIN_ROUTE : MAIN_ROUTE} className="logo">a_toxic</Navbar.Brand>
                 <Navbar.Collapse id="basic-navbar-nav">
                     {
-                        !isLogin ?
+                        user.isAuth ?
                             <Nav className="ml-auto">
                                 <Nav.Link as={Link} to={MAIN_ROUTE} className="my-auto">Главная</Nav.Link>
                                 <Nav.Link as={Link} to={MODERATION_ROUTE} className="my-auto">Модерация

@@ -16,8 +16,8 @@ export const fetchAllGroupPosts = async (id) => {
     return data
 }
 
-export const createPostVK = async (author_type, text, userVkId, groupVkId, picture) => {
-    const {data} = await $host.post('api/postVK/', {author_type, text, userVkId, groupVkId, picture})
+export const createPostVK = async (id, author_type, text, date, userVkId, groupVkId, picture) => {
+    const {data} = await $host.post('api/postVK/', {id, author_type, text, date, userVkId, groupVkId, picture})
     return data
 }
 

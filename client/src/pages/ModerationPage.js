@@ -3,10 +3,10 @@ import {Button, Card, Col, Container, Dropdown, DropdownButton, Form, FormContro
 import ModerationTable from "../components/ModerationTable";
 import {fetchOneUser} from "../http/user_api";
 import jwt_decode from "jwt-decode";
-import {createGroupVK, fetchAllUserGroups} from "../http/groups_api";
+import {createGroupVK, fetchAllUserGroups, fetchOneGroupByScreenName} from "../http/groups_api";
 import {fetchAllUserUsers} from "../http/users_api";
 import {Link} from "react-router-dom";
-import {fetchPostsFromVK} from "../http/posts_api";
+import {createPostVK, fetchAllGroupPosts, fetchPostsFromVK} from "../http/posts_api";
 import {forEach} from "react-bootstrap/ElementChildren";
 import {Scrollbars} from "rc-scrollbars";
 
@@ -25,28 +25,20 @@ const ModerationPage = () => {
     useEffect(() => {
         if (storedToken) {
             fetchAllUserGroups(parseInt(jwt_decode(storedToken).id)).then(data => setFavoriteGroups(data))
-
         }
     }, [])
 
     const [groupId, setGroupId] = useState(undefined)
     const [favoriteGroups, setFavoriteGroups] = useState(undefined)
     const [currentPosts, setCurrentPosts] = useState(undefined)
-    const [filterDate, setFilterDate] = useState(undefined)
-    console.log(groupId)
-    console.log(currentPosts)
 
     const GetPosts = async () => {
         if (groupId !== undefined) {
-            fetchPostsFromVK(groupId).then(data => setCurrentPosts({
-                "items": data["posts"]["items"],
-            }))
+            fetchAllGroupPosts(groupId).then(data => setCurrentPosts(data))
         }
-        console.log(currentPosts)
     }
-    const FilterDate = async (e) => {
 
-    }
+
     return (
         <Container>
             <Row className="my-4">
@@ -57,7 +49,7 @@ const ModerationPage = () => {
                                         onSelect={e => setGroupId(e)}>
                             {favoriteGroups ?
                                 favoriteGroups.map((group) =>
-                                    <Dropdown.Item eventKey={group.screen_name}>{group.info}</Dropdown.Item>
+                                    <Dropdown.Item eventKey={group.id}>{group.info}</Dropdown.Item>
                                 ) : ""}
                         </DropdownButton>
                         <Button className="ml-3" onClick={GetPosts} type="button">Просмотреть</Button>
@@ -65,30 +57,30 @@ const ModerationPage = () => {
                 </Col>
             </Row>
 
-            <h5 className="my-3">Посты {groupId}</h5>
+            <h5 className="my-3">Посты </h5>
             <Row className="my-3">
                 <Col sm={2}>
-                    <DropdownButton id="dropdown-basic-button" title="Период" className="my-3"
-                                    onSelect={e => setFilterDate(e)}>
-                        <Dropdown.Item eventKey={0}>За день</Dropdown.Item>
-                        <Dropdown.Item eventKey={1}>За неделю</Dropdown.Item>
+                    <DropdownButton id="dropdown-basic-button" title="Период" className="my-3">
+                        <Dropdown.Item eventKey={0}>За последний день</Dropdown.Item>
+                        <Dropdown.Item eventKey={1}>За последнюю неделю</Dropdown.Item>
                         <Dropdown.Item eventKey={2}>За месяц</Dropdown.Item>
                     </DropdownButton>
+                    <Button className=""type="button">Применить</Button>
                 </Col>
                 <Col>
                     <Scrollbars className="px-3" style={{width: "auto", height: "90vh"}}>
                         {currentPosts ?
-                            currentPosts.items.map((post) =>
+                            currentPosts.map((post) =>
+
                                 <Card className="my-4 mx-4">
                                     <Card.Body className="border-card">
                                         <Row>
                                             <Col sm={3}><h5>Токисчность: %</h5></Col>
-                                            <Col>{filterDate ?
+                                            <Col>
                                                 <div>
                                                     <h5>Дата: {new Date(post.date * 1000).toDateString()}</h5>
                                                     <div className="norm_font">{post.text}</div>
-                                                </div> : ""
-                                            }
+                                                </div>
 
                                             </Col>
 

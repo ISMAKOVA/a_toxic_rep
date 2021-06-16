@@ -27,6 +27,13 @@ class GroupVKController {
         })
         return res.json(groupVK)
     }
+    async getOneByScreenName(req, res) {
+        const {id} = req.params
+        const groupVK = await Groups_VK.findOne({
+            where: {screen_name:id}
+        })
+        return res.json(groupVK)
+    }
 
     async create(req, res, next) {
         try {

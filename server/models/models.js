@@ -42,13 +42,13 @@ const Subscribers = sequelize.define('subscribers',{
     is_admin: {type: DataTypes.BOOLEAN},
 });
 
-
 const Posts_VK = sequelize.define('post_vk',{
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    id: {type: DataTypes.INTEGER, primaryKey: true},
     // author_id: {type: DataTypes.INTEGER},
     author_type : {type: DataTypes.STRING},
     // wall_id: {type: DataTypes.INTEGER},
-    text: {type: DataTypes.STRING},
+    text: {type: DataTypes.TEXT},
+    date:{type: DataTypes.INTEGER},
     picture:{type:DataTypes.STRING},
     // toxicity_id: {type: DataTypes.INTEGER}
 });
@@ -64,14 +64,13 @@ const Comments_VK = sequelize.define('comments_vk',{
     // post_id: {type: DataTypes.INTEGER},
     // author_id: {type: DataTypes.INTEGER},
     author_type: {type: DataTypes.STRING},//0 - пользователь 1 - группа
-    text: {type: DataTypes.STRING},
+    text: {type: DataTypes.TEXT},
     picture:{type:DataTypes.STRING},
     // toxicity_id: {type: DataTypes.INTEGER}
 });
 
 const Toxicity_types = sequelize.define('toxicity_type',{
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    toxicity_type: {type: DataTypes.STRING},
     is_toxic: {type: DataTypes.BOOLEAN},
     is_rude: {type: DataTypes.BOOLEAN},
     is_negative : {type: DataTypes.BOOLEAN},
@@ -80,7 +79,7 @@ const Toxicity_types = sequelize.define('toxicity_type',{
 
 const Favorite_groups =  sequelize.define('favorite_groups',{
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    info:{type: DataTypes.STRING, allowNull: true}
+    info:{type: DataTypes.TEXT, allowNull: true}
 });
 
 Users.hasMany(Users_VK);

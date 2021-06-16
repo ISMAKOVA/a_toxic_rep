@@ -6,6 +6,11 @@ export const fetchOneGroup = async (id) => {
     return data
 }
 
+export const fetchOneGroupByScreenName = async (id) => {
+    const {data} = await $host.get('api/groupVK/' + id+'/byScreenName')
+    return data
+}
+
 export const fetchAllGroups = async () => {
     const {data} = await $host.get('api/groupVK/')
     return data

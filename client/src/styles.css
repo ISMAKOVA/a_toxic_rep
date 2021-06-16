@@ -194,7 +194,7 @@ input[type="file"] {
 }
 .border-card:hover{
     border: none;
-    box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #F0F0F3;
+    box-shadow: 9px 9px 25px rgba(174, 174, 192, 0.4), -9px -9px 25px #F0F0F3;
 }
 .avatar{
     width: 60px;

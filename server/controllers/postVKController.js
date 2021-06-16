@@ -27,8 +27,8 @@ class PostVKController {
 
     async create(req, res, next) {
         try {
-            const {author_type, text, userVkId, groupVkId, picture} = req.body
-            const postVK = await Posts_VK.create({author_type, text, userVkId, groupVkId, picture})
+            const {id, author_type, text, date, userVkId, groupVkId, picture} = req.body
+            const postVK = await Posts_VK.create({id, author_type, text, date, userVkId, groupVkId, picture})
             return res.json(postVK)
         } catch (e) {
             next(ApiError.badRequest(e.message))
@@ -50,10 +50,10 @@ class PostVKController {
 
     async update(req, res, next) {
         try {
-            const {id, author_type, text, userVkId, groupVkId} = req.body
+            const {id, author_type, text, date, userVkId, groupVkId, picture} = req.body
             const postVK = (await Posts_VK.findOne({
                 where: {id}
-            })).update({author_type: author_type, text: text, userVkId: userVkId, groupVkId: groupVkId})
+            })).update({author_type: author_type, text: text, userVkId: userVkId, groupVkId: groupVkId, date:date, picture:picture})
             return res.json(postVK)
         } catch (e) {
             next(ApiError.badRequest(e.message))

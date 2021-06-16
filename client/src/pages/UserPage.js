@@ -7,6 +7,9 @@ import {fetchOneUser, update} from "../http/user_api";
 import {Link} from "react-router-dom";
 import {createGroupVK, fetchAllUserGroups, fetchOneGroupFromVK} from "../http/groups_api";
 import {createUserVK, fetchAllUserUsers, fetchOneUserFromVK} from "../http/users_api";
+import {createPostVK, fetchPostsFromVK} from "../http/posts_api";
+import CreateComplaint from "../components/CreateComplaint";
+import ModalWindow from "../components/ModalWindow";
 
 const UserPage = observer(() => {
     //get token of current user
@@ -37,22 +40,17 @@ const UserPage = observer(() => {
     const fileInput = useRef(null)
 
     // this data to add new group
+    const [groupInfo, setGroupInfo] = useState(undefined)
     const [groupId, setGroupId] = useState(undefined)
-    const [groupNumId, setGroupNumId] = useState(undefined)
-    const [groupName, setGroupName] = useState(undefined)
-    const [groupDescription, setGroupDescription] = useState(undefined)
-    const [groupPic, setGroupPic] = useState(undefined)
-    const [groupPrivacy, setPrivacy] = useState(undefined)
     const [favoriteGroups, setFavoriteGroups] = useState(undefined)
-    const [groupScreenName, setGroupScreenName] = useState(undefined)
 
     // this data to add new user
+    const [userInfo, setUserInfo] = useState(undefined)
     const [userId, setUserId] = useState(undefined)
-    const [userNumId, setUserNumId] = useState(undefined)
-    const [userUsername, setUserUsername] = useState(undefined)
-    const [userPrivacy, setUserPrivacy] = useState(undefined)
-    const [userAvatar, setUserAvatar] = useState(undefined)
     const [favoriteUsers, setFavoriteUsers] = useState(undefined)
+
+    const [createComplainVisible, setCreateComplainVisible] = useState(false)
+
 
     const selectFile = e => {
         setFile(e.target.files[0])
@@ -72,35 +70,49 @@ const UserPage = observer(() => {
     }
     const [showUser, setShowUser] = useState(false)
     const GetUser = async () => {
-        if(userId!==undefined) {
-            fetchOneUserFromVK(userId).then(data => setUserNumId(data['users'][0]['id']))
-            fetchOneUserFromVK(userId).then(data => setUserUsername(data['users'][0]['first_name'] + ' ' + data['users'][0]['last_name']))
-            fetchOneUserFromVK(userId).then(data => setUserPrivacy(data['users'][0]['is_closed']))
-            fetchOneUserFromVK(userId).then(data => setUserAvatar(data['users'][0]['photo_200']))
+        if (userId !== undefined) {
+            fetchOneUserFromVK(userId).then(data => setUserInfo({
+                'id': data['users'][0]['id'],
+                'username': data['users'][0]['first_name'] + ' ' + data['users'][0]['last_name'],
+                'privacy': data['users'][0]['is_closed'],
+                'avatar': data['users'][0]['photo_200']
+            }))
             setShowUser(true)
         }
 
     }
     const [showGroup, setShowGroup] = useState(false)
     const GetGroup = async () => {
-        if(groupId!==undefined) {
-            fetchOneGroupFromVK(groupId).then(data => setGroupNumId(data['groups']['0']['id']))
-            fetchOneGroupFromVK(groupId).then(data => setGroupName(data['groups']['0']['name']))
-            fetchOneGroupFromVK(groupId).then(data => setGroupDescription(data['groups']['0']['description']))
-            fetchOneGroupFromVK(groupId).then(data => setGroupPic(data['groups']['0']['photo_200']))
-            fetchOneGroupFromVK(groupId).then(data => setPrivacy(data['groups']['0']['is_closed']))
-            fetchOneGroupFromVK(groupId).then(data => setGroupScreenName(data['groups']['0']['screen_name']))
+        if (groupId !== undefined) {
+            fetchOneGroupFromVK(groupId).then((data) => setGroupInfo({
+                'id': data['groups']['0']['id'],
+                'name': data['groups']['0']['name'],
+                'description': data['groups']['0']['description'],
+                'pic': data['groups']['0']['photo_200'],
+                'privacy': data['groups']['0']['is_closed'],
+                'screen_name': data['groups']['0']['screen_name']
+            }))
+
+            // console.log(groupInfo)
             setShowGroup(true)
         }
 
     }
     const AddUserToUser = async () => {
-        createUserVK(userNumId, userUsername, userPrivacy, userAvatar, parseInt(jwt_decode(storedToken).id)).then()
-        alert("User has been added")
+        createUserVK(userInfo.id, userInfo.username, userInfo.privacy, userInfo.avatar, parseInt(jwt_decode(storedToken).id)).then()
+        alert("Пользователь добавлен!")
     }
     const AddGroupToUser = async () => {
-        createGroupVK(groupNumId, groupName, groupPrivacy, groupScreenName, groupPic, parseInt(jwt_decode(storedToken).id)).then()
-        alert("Group has been added")
+        createGroupVK(groupInfo.id, groupInfo.name, groupInfo.privacy, groupInfo.screen_name, groupInfo.pic,
+            parseInt(jwt_decode(storedToken).id)).then()
+
+        fetchPostsFromVK(groupId).then((data) =>
+            data['posts']['items'].map(item =>
+                createPostVK(item.id, 'group', item.text, item.date, null, groupInfo.id).then())
+        )
+        // createPostVK(1233, 'group', 'some text', null,groupInfo.id).then()
+        alert("Группа добавлена!")
+
     }
 
     return (
@@ -196,22 +208,22 @@ const UserPage = observer(() => {
                                             <Button className="" onClick={GetGroup} type="button">Поиск</Button>
 
                                         </Form>
-                                        {showGroup ?
+                                        {groupInfo ?
                                             <Card className="my-4 box-shadow-card">
                                                 <Card.Body className="">
                                                     <Row>
                                                         <Col className="ml-2" sm={4}><img className="round_img"
-                                                                                          src={groupPic} alt="pic"
+                                                                                          src={groupInfo.pic} alt="pic"
                                                                                           width={200}
                                                                                           height={200}/></Col>
                                                         <Col sm={6}>
-                                                            <h5>{groupName}</h5>
-                                                            <div>{groupDescription}</div>
-                                                            <div>ВК название: {groupScreenName}</div>
+                                                            <h5>{groupInfo.name}</h5>
+                                                            <div>{groupInfo.description}</div>
+                                                            <div>ВК название: {groupInfo.screen_name}</div>
                                                         </Col>
 
                                                     </Row>
-                                                    {groupName !== "Группа Закрыта" ?
+                                                    {groupInfo.info !== "Группа Закрыта" ?
                                                         <Row className="justify-content-end"><Col sm={4}>
                                                             <Button className="ml-4 mt-3"
                                                                     type="button"
@@ -256,22 +268,23 @@ const UserPage = observer(() => {
                                             <Button className="" onClick={GetUser} type="button">Поиск</Button>
 
                                         </Form>
-                                        {showUser?
+                                        {userInfo ?
                                             <Card className="my-4 box-shadow-card">
                                                 <Card.Body className="">
                                                     <Row>
                                                         <Col className="ml-2" sm={4}><img className="round_img"
-                                                                                          src={userAvatar} alt="pic"
+                                                                                          src={userInfo.avatar}
+                                                                                          alt="pic"
                                                                                           width={200}
                                                                                           height={200}/></Col>
                                                         <Col sm={6}>
-                                                            <h5>{userUsername}</h5>
-                                                            <p>Профиль: {userPrivacy === 0 ? 'закрытый' : 'открытый'} {userPrivacy} </p>
-                                                            <p>ВК Id: {userNumId} </p>
+                                                            <h5>{userInfo.username}</h5>
+                                                            <p>Профиль: {userInfo.privacy === 0 ? 'закрытый' : 'открытый'} </p>
+                                                            <p>ВК Id: {userInfo.id} </p>
                                                         </Col>
 
                                                     </Row>
-                                                    {groupName !== "Группа Закрыта" ?
+                                                    {userInfo.privacy !== 0 ?
                                                         <Row className="justify-content-end"><Col sm={4}>
                                                             <Button className="ml-4 mt-3"
                                                                     type="button"
@@ -287,13 +300,20 @@ const UserPage = observer(() => {
                                 <Card className="my-4 box-shadow-card">
                                     <Card.Body>
                                         <Form.Label className="h5">Добавленные пользователи</Form.Label>
-                                        <Scrollbars style={{width: "auto", height: "44vh"}}>
+                                        <Scrollbars  style={{width: "auto", height: "44vh"}}>
                                             {favoriteUsers ?
                                                 favoriteUsers.map((user) =>
-                                                    <p className="ml-3"><img className="mr-3 round_img"
-                                                                             src={user.avatar} width={30} height={30}
-                                                                             alt="pic"/><Link
-                                                        to={'https://vk.com/' + user.id}>{user.username}</Link></p>
+                                                    <p className="mx-3 mt-2 justify-content-between d-flex">
+                                                        <span>
+                                                            <img className="mr-3 round_img"
+                                                                 src={user.avatar} width={30} height={30}
+                                                                 alt="pic"/>
+                                                            <Link
+                                                                to={'https://vk.com/' + user.id}>{user.username}</Link>
+                                                        </span>
+                                                        <Button onClick={() => setCreateComplainVisible(true)}> Пожаловаться </Button>
+                                                        <CreateComplaint show={createComplainVisible} onHide={() => setCreateComplainVisible(false)}/>
+                                                    </p>
                                                 ) : ""
 
                                             }
