@@ -101,20 +101,20 @@ Friends_connection.belongsTo(Users_VK);
 Users_VK.hasMany(Subscribers);
 Subscribers.belongsTo(Users_VK);
 
-Users_VK.hasMany(Toxicity_types);
-Toxicity_types.belongsTo(Users_VK);
+Toxicity_types.hasMany(Users_VK);
+Users_VK.belongsTo(Toxicity_types);
 
 Groups_VK.hasMany(Subscribers);
 Subscribers.belongsTo(Groups_VK);
 
-Groups_VK.hasMany(Toxicity_types);
-Toxicity_types.belongsTo(Groups_VK);
+Toxicity_types.hasMany(Groups_VK);
+Groups_VK.belongsTo(Toxicity_types);
 
-Posts_VK.hasMany(Toxicity_types);
-Toxicity_types.belongsTo(Posts_VK);
+Toxicity_types.hasMany(Posts_VK);
+Posts_VK.belongsTo(Toxicity_types);
 
-Comments_VK.hasMany(Toxicity_types);
-Toxicity_types.belongsTo(Comments_VK);
+Toxicity_types.hasMany(Comments_VK);
+Comments_VK.belongsTo(Toxicity_types);
 
 Users_VK.hasMany(Posts_VK);
 Posts_VK.belongsTo(Users_VK);
