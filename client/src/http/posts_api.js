@@ -30,3 +30,4 @@ export const fetchPostsFromVK = async (id) => {
     const {data} = await $host.get('api/postVK/' + id + '/fromVK')
     return data
 }
+

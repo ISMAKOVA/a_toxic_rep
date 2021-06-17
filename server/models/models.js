@@ -63,7 +63,7 @@ const Comments_VK = sequelize.define('comments_vk',{
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
     // post_id: {type: DataTypes.INTEGER},
     // author_id: {type: DataTypes.INTEGER},
-    author_type: {type: DataTypes.STRING},//0 - пользователь 1 - группа
+    author_type: {type: DataTypes.STRING}, //0 - пользователь 1 - группа
     text: {type: DataTypes.TEXT},
     picture:{type:DataTypes.STRING},
     // toxicity_id: {type: DataTypes.INTEGER}
@@ -71,7 +71,7 @@ const Comments_VK = sequelize.define('comments_vk',{
 
 const Toxicity_types = sequelize.define('toxicity_type',{
     id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
-    is_toxic: {type: DataTypes.BOOLEAN},
+    toxic_value: {type: DataTypes.FLOAT},
     is_rude: {type: DataTypes.BOOLEAN},
     is_negative : {type: DataTypes.BOOLEAN},
     contains_NER: {type: DataTypes.BOOLEAN},

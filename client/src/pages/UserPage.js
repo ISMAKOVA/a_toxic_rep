@@ -8,6 +8,7 @@ import {Link} from "react-router-dom";
 import {createGroupVK, fetchAllUserGroups, fetchOneGroupFromVK} from "../http/groups_api";
 import {createUserVK, fetchAllUserUsers, fetchOneUserFromVK} from "../http/users_api";
 import {createPostVK, fetchPostsFromVK} from "../http/posts_api";
+import {createToxicityValue} from '../http/toxicity_api';
 import CreateComplaint from "../components/CreateComplaint";
 import ModalWindow from "../components/ModalWindow";
 
@@ -62,13 +63,13 @@ const UserPage = observer(() => {
         formData.append('username', username)
         formData.append('avatar', file)
         formData.append('password', password)
-        // for (const key of formData.entries()) {
-        //     console.log(key[0] + ', ' + key[1])
-        // }
+        for (const key of formData.entries()) {
+            console.log(key[0] + ', ' + key[1])
+        }
         update(formData).then()
         alert("Данные обновлены");
     }
-    const [showUser, setShowUser] = useState(false)
+
     const GetUser = async () => {
         if (userId !== undefined) {
             fetchOneUserFromVK(userId).then(data => setUserInfo({
@@ -77,40 +78,42 @@ const UserPage = observer(() => {
                 'privacy': data['users'][0]['is_closed'],
                 'avatar': data['users'][0]['photo_200']
             }))
-            setShowUser(true)
         }
-
     }
-    const [showGroup, setShowGroup] = useState(false)
+
     const GetGroup = async () => {
         if (groupId !== undefined) {
             fetchOneGroupFromVK(groupId).then((data) => setGroupInfo({
                 'id': data['groups']['0']['id'],
-                'name': data['groups']['0']['name'],
+                'info': data['groups']['0']['name'],
                 'description': data['groups']['0']['description'],
                 'pic': data['groups']['0']['photo_200'],
                 'privacy': data['groups']['0']['is_closed'],
                 'screen_name': data['groups']['0']['screen_name']
             }))
-
-            // console.log(groupInfo)
-            setShowGroup(true)
         }
-
     }
     const AddUserToUser = async () => {
         createUserVK(userInfo.id, userInfo.username, userInfo.privacy, userInfo.avatar, parseInt(jwt_decode(storedToken).id)).then()
         alert("Пользователь добавлен!")
     }
     const AddGroupToUser = async () => {
-        createGroupVK(groupInfo.id, groupInfo.name, groupInfo.privacy, groupInfo.screen_name, groupInfo.pic,
+        createGroupVK(groupInfo.id, groupInfo.info, groupInfo.privacy, groupInfo.screen_name, groupInfo.pic,
             parseInt(jwt_decode(storedToken).id)).then()
 
+        // createPostVK(88883, 'group', "sdfasdf", 1212342233, null, groupInfo.id).then()
+
         fetchPostsFromVK(groupId).then((data) =>
-            data['posts']['items'].map(item =>
-                createPostVK(item.id, 'group', item.text, item.date, null, groupInfo.id).then())
+                data['posts']['items'].map(item =>
+                    createPostVK(item.id, 'group', item.text, item.date, null, groupInfo.id).then())
+            // console.log(item.id, 'group', item.text, item.date, null, groupInfo.id))
         )
-        // createPostVK(1233, 'group', 'some text', null,groupInfo.id).then()
+        fetchPostsFromVK(groupId).then((data) =>
+                data['labeled'].map(item =>
+                    createToxicityValue(item['toxicity'], null, null,
+                        null, null, groupInfo.id, item["post_id"], null))
+
+        )
         alert("Группа добавлена!")
 
     }
@@ -190,7 +193,6 @@ const UserPage = observer(() => {
                                         </Col>
                                     </Form.Group>
 
-
                                     <Button variant="primary" onClick={Update}>
                                         Обновить
                                     </Button>
@@ -217,7 +219,7 @@ const UserPage = observer(() => {
                                                                                           width={200}
                                                                                           height={200}/></Col>
                                                         <Col sm={6}>
-                                                            <h5>{groupInfo.name}</h5>
+                                                            <h5>{groupInfo.info}</h5>
                                                             <div>{groupInfo.description}</div>
                                                             <div>ВК название: {groupInfo.screen_name}</div>
                                                         </Col>
@@ -300,7 +302,7 @@ const UserPage = observer(() => {
                                 <Card className="my-4 box-shadow-card">
                                     <Card.Body>
                                         <Form.Label className="h5">Добавленные пользователи</Form.Label>
-                                        <Scrollbars  style={{width: "auto", height: "44vh"}}>
+                                        <Scrollbars style={{width: "auto", height: "44vh"}}>
                                             {favoriteUsers ?
                                                 favoriteUsers.map((user) =>
                                                     <p className="mx-3 mt-2 justify-content-between d-flex">
@@ -311,18 +313,15 @@ const UserPage = observer(() => {
                                                             <Link
                                                                 to={'https://vk.com/' + user.id}>{user.username}</Link>
                                                         </span>
-                                                        <Button onClick={() => setCreateComplainVisible(true)}> Пожаловаться </Button>
-                                                        <CreateComplaint show={createComplainVisible} onHide={() => setCreateComplainVisible(false)}/>
+                                                        <Button
+                                                            onClick={() => setCreateComplainVisible(true)}> Пожаловаться </Button>
+                                                        <CreateComplaint show={createComplainVisible}
+                                                                         onHide={() => setCreateComplainVisible(false)}/>
                                                     </p>
-                                                ) : ""
-
-                                            }
-
-
+                                                ) : ""}
                                         </Scrollbars>
                                     </Card.Body>
                                 </Card>
-
                             </Tab.Pane>
                         </Tab.Content>
                     </Col>

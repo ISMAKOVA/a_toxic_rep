@@ -14,12 +14,18 @@ class ToxicityTypesController {
         })
         return res.json(toxicity_types)
     }
+    async getByPostId(req, res) {
+        const {id, group_id} = req.params
+        const toxicity_types = await Toxicity_types.findOne({
+            where: {postVkId:id, groupVkId:group_id}
+        })
+        return res.json(toxicity_types)
+    }
 
     async create(req, res, next) {
         try {
             const {
-                toxicity_type,
-                is_toxic,
+                toxic_value,
                 is_rude,
                 is_negative,
                 contains_NER,
@@ -29,7 +35,7 @@ class ToxicityTypesController {
                 commentsVkId
             } = req.body
             const toxicity_types = Toxicity_types.create({
-                toxicity_type, is_toxic, is_rude, is_negative, contains_NER, userVkId, groupVkId, postVkId, commentsVkId
+                toxic_value, is_rude, is_negative, contains_NER, userVkId, groupVkId, postVkId, commentsVkId
             })
             return res.json(toxicity_types)
         } catch (e) {
@@ -53,8 +59,7 @@ class ToxicityTypesController {
         try {
             const {
                 id,
-                toxicity_type,
-                is_toxic,
+                toxic_value,
                 is_rude,
                 is_negative,
                 contains_NER,
@@ -66,7 +71,7 @@ class ToxicityTypesController {
             const toxicity_types = (await Toxicity_types.findOne({
                 where: {id}
             })).update({
-                toxicity_type: toxicity_type, is_toxic: is_toxic, is_rude: is_rude,
+                toxic_value:  toxic_value, is_rude: is_rude,
                 is_negative: is_negative, contains_NER: contains_NER, userVkId: userVkId,
                 groupVkId: groupVkId, postVkId: postVkId, commentsVkId: commentsVkId
             })

@@ -2,6 +2,8 @@ const {Comments_VK} = require('../models/models')
 const ApiError = require('../error/ApiError')
 const uuid = require('uuid')
 const path = require('path')
+const axios = require('axios')
+
 
 class CommentsVKController {
     async getAll(req, res) {
@@ -56,6 +58,20 @@ class CommentsVKController {
             next(ApiError.badRequest(e.message))
         }
     }
+
+
+    async getCommentVK(req, res, next) {
+        try {
+            const {id, post_id} = req.params
+            await axios.get(process.env.TOXIC_API_PORT+'toxicity_py/api/comments/'+id+'/'+post_id).then(response => {
+                return res.send(response.data)
+            });
+
+        } catch (e) {
+            next(ApiError.badRequest((e.message)))
+        }
+    }
+
 }
 
 module.exports = new CommentsVKController()

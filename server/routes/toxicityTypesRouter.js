@@ -4,6 +4,7 @@ const toxicityTypesController = require('../controllers/toxicityTypesController'
 
 router.get('/', toxicityTypesController.getAll)
 router.get('/:id', toxicityTypesController.getOne)
+router.get('/:id/:group_id/byPostId', toxicityTypesController.getByPostId)
 router.post('/', toxicityTypesController.create)
 router.delete('/:id', toxicityTypesController.delete)
 router.put('/:id', toxicityTypesController.update)

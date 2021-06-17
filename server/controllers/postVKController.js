@@ -71,6 +71,7 @@ class PostVKController {
             next(ApiError.badRequest((e.message)))
         }
     }
+
 }
 
 module.exports = new PostVKController()
