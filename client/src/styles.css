@@ -31,7 +31,12 @@ body{
 .accent_color_3{
     color: #C590EF;
 }
-
+.bg_color_2{
+    background: #83DBD6 !important;
+}
+.bg_color_3{
+    background: #C590EF !important;
+}
 
 a{
     color: #728AB7 !important;
@@ -107,7 +112,11 @@ a:hover{
     border: none;
     color: #745FF2;
     outline: none !important;
+}
 
+.bright-btn{
+    background: #745FF2 !important;
+    color: #F0F0F3 !important;
 }
 .btn-primary:not(:disabled):not(.disabled):active{
     border-radius: 30px;
@@ -204,7 +213,6 @@ input[type="file"] {
     box-shadow: 10px 10px 30px rgba(174, 174, 192, 0.4), -10px -10px 30px #FFFFFF;
     background: rgb(197,144,239);
     background: linear-gradient(196deg, rgba(197,144,239,1) 0%, rgba(116,95,242,1) 100%);
-
 }
 .avatar_img{
     width: 60px;
@@ -233,4 +241,10 @@ input[type="file"] {
 
 }
 
-
+.circle{
+    height: 25px;
+    width: 25px;
+    background-color: #745FF2;
+    border-radius: 50%;
+    display: inline-block;
+}

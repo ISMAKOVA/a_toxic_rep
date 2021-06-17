@@ -110,7 +110,7 @@ const ModerationPage = () => {
                                     <Dropdown.Item eventKey={group.id}>{group.info}</Dropdown.Item>
                                 ) : ""}
                         </DropdownButton>
-                        <Button className="ml-3" onClick={GetPosts} type="button">Просмотреть</Button>
+                        <Button className="ml-4" onClick={GetPosts} type="button">Просмотреть</Button>
                     </Form>
                 </Col>
             </Row>
@@ -179,7 +179,7 @@ const ModerationPage = () => {
                 <Col>
                     <Scrollbars className="px-3" style={{width: "auto", height: "90vh"}}>
                         <ModerationTable
-                            comments={datePeriod ? datePeriod : [{date: "", text: "", postVkId: ""}]}
+                            comments={datePeriod ? datePeriod : [{id: "", date: "", text: "", postVkId: ""}]}
                         />
                     </Scrollbars>
                 </Col>

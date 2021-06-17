@@ -75,7 +75,7 @@ const MainPage = observer(() => {
             </Row>
             <Row className="my-4 row-window">
                 <Col>
-                    <Card body>Здесь будет краткая статистика</Card>
+
                 </Col>
             </Row>
         </Container>
