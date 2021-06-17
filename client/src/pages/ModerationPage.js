@@ -9,6 +9,7 @@ import {Link} from "react-router-dom";
 import {createPostVK, fetchAllGroupPosts, fetchPostsFromVK} from "../http/posts_api";
 import {forEach} from "react-bootstrap/ElementChildren";
 import {Scrollbars} from "rc-scrollbars";
+import {getAllToxicityByGroupId} from "../http/toxicity_api";
 
 const ModerationPage = () => {
     const storedToken = localStorage.getItem("token");
@@ -31,10 +32,32 @@ const ModerationPage = () => {
     const [groupId, setGroupId] = useState(undefined)
     const [favoriteGroups, setFavoriteGroups] = useState(undefined)
     const [currentPosts, setCurrentPosts] = useState(undefined)
+    const [toxic, setToxic] = useState(undefined)
+    const [toxicFiltered, setToxicFiltered] = useState(toxic)
+    const [filterToxic, setFilterToxic] = useState(undefined)
 
     const GetPosts = async () => {
         if (groupId !== undefined) {
             fetchAllGroupPosts(groupId).then(data => setCurrentPosts(data))
+            getAllToxicityByGroupId(groupId).then(data => setToxic(data))
+            console.log(groupId)
+            setToxicFiltered(toxic)
+        }
+    }
+    const ApplyFilters = async () => {
+        if (filterToxic !== undefined) {
+            switch (filterToxic) {
+                case "0":
+                    const result = []
+                    toxic.filter(value => value.toxic_value * 100 > 50).map(value => result.push(value))
+                    setToxicFiltered(result)
+                    break;
+                case "1":
+                    const result2 = []
+                    toxic.filter(value => value.toxic_value * 100 < 50).map(value => result2.push(value))
+                    setToxicFiltered(result2)
+                    break;
+            }
         }
     }
 
@@ -60,31 +83,40 @@ const ModerationPage = () => {
             <h5 className="my-3">Посты </h5>
             <Row className="my-3">
                 <Col sm={2}>
-                    <DropdownButton id="dropdown-basic-button" title="Период" className="my-3">
-                        <Dropdown.Item eventKey={0}>За последний день</Dropdown.Item>
-                        <Dropdown.Item eventKey={1}>За последнюю неделю</Dropdown.Item>
-                        <Dropdown.Item eventKey={2}>За месяц</Dropdown.Item>
+                    <DropdownButton id="dropdown-basic-button" title="Токсичность" className="my-3"
+                                    onSelect={e => setFilterToxic(e)}>
+                        <Dropdown.Item eventKey={0}>Токсичные</Dropdown.Item>
+                        <Dropdown.Item eventKey={1}>Нетокиснчые</Dropdown.Item>
                     </DropdownButton>
-                    <Button className=""type="button">Применить</Button>
+                    <Button className="" type="button" onClick={ApplyFilters}>Применить</Button>
                 </Col>
                 <Col>
                     <Scrollbars className="px-3" style={{width: "auto", height: "90vh"}}>
-                        {currentPosts ?
-                            currentPosts.map((post) =>
+
+                        {toxicFiltered ?
+                            toxicFiltered.map((value) =>
 
                                 <Card className="my-4 mx-4">
                                     <Card.Body className="border-card">
-                                        <Row>
-                                            <Col sm={3}><h5>Токисчность: %</h5></Col>
-                                            <Col>
-                                                <div>
-                                                    <h5>Дата: {new Date(post.date * 1000).toDateString()}</h5>
-                                                    <div className="norm_font">{post.text}</div>
-                                                </div>
 
-                                            </Col>
+                                        {currentPosts.filter(post => value.postVkId === post.id).map(post =>
+                                            <Row>
 
-                                        </Row>
+                                                <Col sm={4}>
+                                                    <h5>Токисчность: {Math.round(value.toxic_value * 100 * 10) / 10}%</h5>
+                                                </Col>
+                                                <Col>
+
+                                                    <div>
+                                                        <h5>Дата: {new Date(post.date * 1000).toDateString()}</h5>
+                                                        <div className="norm_font">{post.text}</div>
+                                                    </div>
+
+                                                </Col>
+
+                                            </Row>)
+                                        }
+
 
                                     </Card.Body>
                                 </Card>

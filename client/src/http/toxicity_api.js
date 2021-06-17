@@ -13,7 +13,11 @@ export const createToxicityValue = async (toxic_value, is_rude, is_negative, con
     })
     return data
 }
-export const fetchOneByPostId = async (post_id, group_id) => {
+export const getOneToxicityByPostId = async (post_id, group_id) => {
     const {data} = await $host.get('api/toxicityTypes/' + post_id +'/'+group_id+'/byPostId')
+    return data
+}
+export const getAllToxicityByGroupId = async (group_id) => {
+    const {data} = await $host.get('api/toxicityTypes/' + +group_id+'/byGroupId')
     return data
 }

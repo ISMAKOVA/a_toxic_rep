@@ -13,6 +13,7 @@ export const fetchAllPosts = async () => {
 
 export const fetchAllGroupPosts = async (id) => {
     const {data} = await $host.get('api/postVK/' + id+'/byGroup')
+
     return data
 }
 

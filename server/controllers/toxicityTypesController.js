@@ -6,6 +6,14 @@ class ToxicityTypesController {
         const toxicity_types = await Toxicity_types.findAll()
         return res.json(toxicity_types)
     }
+    async getAllByGroupId(req, res) {
+        const {group_id} = req.params
+        const toxicity_types = await Toxicity_types.findAll({
+                where: {groupVkId: group_id}
+            }
+        )
+        return res.json(toxicity_types)
+    }
 
     async getOne(req, res) {
         const {id} = req.params
@@ -14,7 +22,7 @@ class ToxicityTypesController {
         })
         return res.json(toxicity_types)
     }
-    async getByPostId(req, res) {
+    async getOneByPostId(req, res) {
         const {id, group_id} = req.params
         const toxicity_types = await Toxicity_types.findOne({
             where: {postVkId:id, groupVkId:group_id}
