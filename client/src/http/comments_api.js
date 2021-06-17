@@ -7,14 +7,18 @@ export const fetchOneComment = async (id) => {
     return data
 }
 
-export const fetchAllPosts = async () => {
+export const fetchAllComments = async () => {
     const {data} = await $host.get('api/commentsVK/')
+    return data
+}
+export const fetchAllCommentsByGroupId = async (id) => {
+    const {data} = await $host.get('api/commentsVK/'+id+'/byGroupId')
     return data
 }
 
 
-export const createPostVK = async (id, author_type, text, userVkId, groupVkId, postVkId) => {
-    const {data} = await $host.post('api/commentsVK/', {id, author_type, text, userVkId, groupVkId, postVkId})
+export const createCommentVK = async (id, date,author_type, text, picture, userVkId, groupVkId, postVkId) => {
+    const {data} = await $host.post('api/commentsVK/', {id,date, author_type, text, picture, userVkId, groupVkId, postVkId})
     return data
 }
 

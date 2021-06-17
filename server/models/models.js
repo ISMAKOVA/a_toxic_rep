@@ -60,7 +60,8 @@ const Answers = sequelize.define('answers',{
 });
 
 const Comments_VK = sequelize.define('comments_vk',{
-    id: {type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true},
+    id: {type: DataTypes.INTEGER, primaryKey: true},
+    date:{type: DataTypes.INTEGER},
     // post_id: {type: DataTypes.INTEGER},
     // author_id: {type: DataTypes.INTEGER},
     author_type: {type: DataTypes.STRING}, //0 - пользователь 1 - группа

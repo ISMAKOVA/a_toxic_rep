@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Col, Container, Dropdown, DropdownButton, Form, FormControl, Row} from "react-bootstrap";
+import {Button, Card, Col, Container, Dropdown, DropdownButton, Form, FormControl, Row, Table} from "react-bootstrap";
 import ModerationTable from "../components/ModerationTable";
 import {fetchOneUser} from "../http/user_api";
 import jwt_decode from "jwt-decode";
@@ -10,6 +10,7 @@ import {createPostVK, fetchAllGroupPosts, fetchPostsFromVK} from "../http/posts_
 import {forEach} from "react-bootstrap/ElementChildren";
 import {Scrollbars} from "rc-scrollbars";
 import {getAllToxicityByGroupId} from "../http/toxicity_api";
+import {fetchAllCommentsByGroupId} from "../http/comments_api";
 
 const ModerationPage = () => {
     const storedToken = localStorage.getItem("token");
@@ -35,13 +36,17 @@ const ModerationPage = () => {
     const [toxic, setToxic] = useState(undefined)
     const [toxicFiltered, setToxicFiltered] = useState(toxic)
     const [filterToxic, setFilterToxic] = useState(undefined)
-
+    const [comments, setComments] = useState(undefined)
+    const [datePeriod, setDatePeriod] = useState(undefined)
+    const [dateFilter, setDateFilter] = useState(undefined)
     const GetPosts = async () => {
         if (groupId !== undefined) {
             fetchAllGroupPosts(groupId).then(data => setCurrentPosts(data))
             getAllToxicityByGroupId(groupId).then(data => setToxic(data))
-            console.log(groupId)
+            fetchAllCommentsByGroupId(groupId).then(data => setComments(data))
+            console.log(comments)
             setToxicFiltered(toxic)
+            setDatePeriod(comments)
         }
     }
     const ApplyFilters = async () => {
@@ -60,7 +65,37 @@ const ModerationPage = () => {
             }
         }
     }
-
+    const ApplyFilters2 = async () => {
+        if (dateFilter !== undefined && comments) {
+            const todayDate = new Date().getDate() + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear();
+            const weekAgoDate = (new Date().getDate() - 7) + '/' + (new Date().getMonth() + 1) + '/' + new Date().getFullYear();
+            const monthAgoDate = new Date().getDate()  + '/' + new Date().getMonth() + '/' + new Date().getFullYear();
+            switch (dateFilter) {
+                case '0':
+                    const result = []
+                    comments.filter(comment => new Date(comment.date * 1000).getDate() + '/' + (new Date(comment.date * 1000).getMonth() + 1) + '/' + new Date(comment.date * 1000).getFullYear()
+                        === todayDate).map(item => result.push(item))
+                    setDatePeriod(result)
+                    break;
+                case '1':
+                    const result1 = []
+                    comments.filter(comment => new Date(comment.date * 1000).getDate() + '/' +
+                        (new Date(comment.date * 1000).getMonth() + 1) + '/' + new Date(comment.date * 1000).getFullYear()
+                        >= todayDate && weekAgoDate < new Date(comment.date * 1000).getDate() + '/' +
+                        (new Date(comment.date * 1000).getMonth() + 1) + '/' + new Date(comment.date * 1000).getFullYear()).map(item => result1.push(item))
+                    setDatePeriod(result1)
+                    break;
+                case '2':
+                    const result2 = []
+                    comments.filter(comment => new Date(comment.date * 1000).getDate() + '/' +
+                        (new Date(comment.date * 1000).getMonth() + 1) + '/' + new Date(comment.date * 1000).getFullYear()
+                        >= todayDate && monthAgoDate < new Date(comment.date * 1000).getDate() + '/' +
+                        (new Date(comment.date * 1000).getMonth() + 1) + '/' + new Date(comment.date * 1000).getFullYear()).map(item => result2.push(item))
+                    setDatePeriod(result2)
+                    break;
+            }
+        }
+    }
 
     return (
         <Container>
@@ -131,42 +166,29 @@ const ModerationPage = () => {
             <Row className="my-3">
 
                 <Col sm={3}>
-                    <DropdownButton id="dropdown-basic-button" title="Период" className="my-3">
-                        <Dropdown.Item href="#/action-1">За день</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">За неделю</Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">За месяц</Dropdown.Item>
+                    <DropdownButton id="dropdown-basic-button" title="Период" className="my-3"
+                                    onSelect={e => setDateFilter(e)}>
+                        <Dropdown.Item eventKey={0}>За день</Dropdown.Item>
+                        <Dropdown.Item eventKey={1}>За неделю</Dropdown.Item>
+                        <Dropdown.Item eventKey={2}>За месяц</Dropdown.Item>
                     </DropdownButton>
 
-                    <DropdownButton id="dropdown-basic-button" title="Dropdown button" className="my-3">
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                    </DropdownButton>
-
-                    <DropdownButton id="dropdown-basic-button" title="Dropdown button" className="my-3">
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                        <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                    </DropdownButton>
+                    <Button className="" type="button" onClick={ApplyFilters2}>Применить</Button>
                 </Col>
 
                 <Col>
-                    <ModerationTable
-                        comments={[
-                            {id: 1, date: '20.01.2021', comment: "Hi", user: "Dayana"},
-                            {id: 2, date: '22.01.2021', comment: "Hi", user: "Dayana2"},
-                            {id: 3, date: '22.01.2021', comment: "Hi my name is Dayana", user: "Dayana3"},
-                            {id: 4, date: '23.01.2021', comment: "Hi my name is Dayana", user: "Dayana4"},
-                            {id: 5, date: '24.01.2021', comment: "Hi my name is Dayana", user: "Dayana5"},
-                            {id: 6, date: '25.01.2021', comment: "Hi my name is Dayana", user: "Dayana6"},
-                            {id: 7, date: '10.01.2021', comment: "Hi my name is Dayana", user: "Dayana7"},
-                        ]}
-                    />
+                    <Scrollbars className="px-3" style={{width: "auto", height: "90vh"}}>
+                        <ModerationTable
+                            comments={datePeriod ? datePeriod : [{date: "", text: "", postVkId: ""}]}
+                        />
+                    </Scrollbars>
                 </Col>
+
             </Row>
 
         </Container>
-    );
+    )
+        ;
 };
 
 export default ModerationPage;

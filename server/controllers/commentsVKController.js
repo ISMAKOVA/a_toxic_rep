@@ -11,6 +11,14 @@ class CommentsVKController {
         return res.json(comments_vk)
     }
 
+    async getAllByGroupId(req, res) {
+        const {id} = req.params
+        const comments_vk = await Comments_VK.findAll({
+            where: {groupVkId:id}}
+        )
+        return res.json(comments_vk)
+    }
+
     async getOne(req, res) {
         const {id} = req.params
         const comments = await Comments_VK.findOne({
@@ -18,6 +26,7 @@ class CommentsVKController {
         })
         return res.json(comments)
     }
+
 
     async delete(req, res, next) {
         const {id} = req.params
@@ -33,21 +42,19 @@ class CommentsVKController {
     }
 
     async create(req, res) {
-        const {author_type, text, userVkId, groupVkId, postVkId} = req.body
-        const {picture} = req.files
-        let fileName = uuid.v4() + ".jpg"
-        await picture.mv(path.resolve(__dirname, '..', 'static', fileName))
-        const comments = await Comments_VK.create({author_type, text, userVkId, groupVkId, postVkId, picture: fileName})
+        const {id, date, author_type, text, picture, userVkId, groupVkId, postVkId} = req.body
+        const comments = await Comments_VK.create({id,date, author_type, text,picture, userVkId, groupVkId, postVkId})
         return res.json(comments)
     }
 
     async update(req, res, next) {
         try {
-            const {id, author_type, text, userVkId, groupVkId, postVkId} = req.body
+            const {id,date, author_type, text,picture, userVkId, groupVkId, postVkId} = req.body
             const comments = (await Comments_VK.findOne({
                 where: {id}
             })).update({
                 author_type: author_type,
+                picture:picture,
                 text: text,
                 userVkId: userVkId,
                 groupVkId: groupVkId,

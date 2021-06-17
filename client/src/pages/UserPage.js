@@ -11,6 +11,7 @@ import {createPostVK, fetchPostsFromVK} from "../http/posts_api";
 import {createToxicityValue} from '../http/toxicity_api';
 import CreateComplaint from "../components/CreateComplaint";
 import ModalWindow from "../components/ModalWindow";
+import {createCommentVK, fetchCommentsFromVK} from "../http/comments_api";
 
 const UserPage = observer(() => {
     //get token of current user
@@ -109,12 +110,31 @@ const UserPage = observer(() => {
             // console.log(item.id, 'group', item.text, item.date, null, groupInfo.id))
         )
         fetchPostsFromVK(groupId).then((data) =>
-                data['labeled'].map(item =>
-                    createToxicityValue(item['toxicity'], null, null,
-                        null, null, groupInfo.id, item["post_id"], null))
-
+            data['labeled'].map(item =>
+                createToxicityValue(item['toxicity'], null, null,
+                    null, null, groupInfo.id, item["post_id"], null))
         )
+        fetchPostsFromVK(groupId).then((data) =>
+            data['labeled'].map(posts =>
+                fetchCommentsFromVK(groupInfo.screen_name, posts['post_id']).then(comments => {
+                    comments['comments']['items'].map(item => {
+                        createCommentVK(item['id'], item['date'],'group', item['text'], null, null, groupInfo.id, posts['post_id'])
+                    })
+                })
+            )
+        )
+
         alert("Группа добавлена!")
+
+    }
+    const CheckWork = async () => {
+        if (groupInfo !== undefined) {
+            fetchCommentsFromVK(groupInfo.screen_name, 81443).then(comments => {
+                comments['comments']['items'].map(item => {
+                    createCommentVK(item['id'], 'group', item['text'], null, null, groupInfo.id, 234234)
+                })
+            })
+        }
 
     }
 
@@ -208,6 +228,7 @@ const UserPage = observer(() => {
                                                           onChange={e => setGroupId(e.target.value)}
                                                           className=" mr-sm-2" style={{width: "50%"}}/>
                                             <Button className="" onClick={GetGroup} type="button">Поиск</Button>
+                                            {/*<Button className="" onClick={CheckWork} type="button">Для проверок</Button>*/}
 
                                         </Form>
                                         {groupInfo ?

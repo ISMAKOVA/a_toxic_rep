@@ -1,5 +1,6 @@
 import React from 'react';
-import {Button, Table} from "react-bootstrap";
+import {Button, Col, Table} from "react-bootstrap";
+import {Scrollbars} from "rc-scrollbars";
 
 
 const useSortableData = (items, config = null) => {
@@ -30,14 +31,14 @@ const useSortableData = (items, config = null) => {
         ) {
             direction = 'descending';
         }
-        setSortConfig({ key, direction });
+        setSortConfig({key, direction});
     };
 
-    return { items: sortedItems, requestSort, sortConfig };
+    return {items: sortedItems, requestSort, sortConfig};
 };
 
 const ModerationTable = (props) => {
-    const { items, requestSort, sortConfig } = useSortableData(props.comments);
+    const {items, requestSort, sortConfig} = useSortableData(props.comments);
     const getClassNamesFor = (name) => {
         if (!sortConfig) {
             return;
@@ -67,8 +68,8 @@ const ModerationTable = (props) => {
                 <th>
                     <Button
                         type="button"
-                        onClick={() => requestSort('comment')}
-                        className={getClassNamesFor('comment')}
+                        onClick={() => requestSort('text')}
+                        className={getClassNamesFor('text')}
                     >
                         Комментарий
                     </Button>
@@ -76,23 +77,27 @@ const ModerationTable = (props) => {
                 <th>
                     <Button
                         type="button"
-                        onClick={() => requestSort('user')}
-                        className={getClassNamesFor('user')}
+                        onClick={() => requestSort('postVkId')}
+                        className={getClassNamesFor('postVkId')}
                     >
-                        Пользователь
+                        Id поста
                     </Button>
                 </th>
             </tr>
             </thead>
-            <tbody>
+
+            <tbody className="text_color">
+
             {items.map((line) => (
                 <tr key={line.id}>
-                    <td>{line.date}</td>
-                    <td>{line.comment}</td>
-                    <td>{line.user}</td>
+                    <td>{new Date(line.date*1000).getDate()+'/'+(new Date(line.date*1000).getMonth()+1)+'/'+ new Date(line.date*1000).getFullYear()}</td>
+                    <td>{line.text}</td>
+                    <td>{line.postVkId}</td>
                 </tr>
             ))}
+
             </tbody>
+
         </Table>
     );
 };
