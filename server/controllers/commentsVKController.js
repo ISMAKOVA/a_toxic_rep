@@ -62,8 +62,8 @@ class CommentsVKController {
 
     async getCommentVK(req, res, next) {
         try {
-            const {id, post_id} = req.params
-            await axios.get(process.env.TOXIC_API_PORT+'toxicity_py/api/comments/'+id+'/'+post_id).then(response => {
+            const {group_screen_name, post_id} = req.params
+            await axios.get(process.env.TOXIC_API_PORT+'toxicity_py/api/comments/'+group_screen_name+'/'+post_id).then(response => {
                 return res.send(response.data)
             });
 
