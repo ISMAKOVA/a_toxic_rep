@@ -1,11 +1,11 @@
 # a_toxic
 Проект веб-приложения по модерации контента из соцсети Вконтакте.
 ## Использованные технологии
-###Фреймворки:
+### Фреймворки:
 * [React](https://ru.reactjs.org)
 * [Node.js](https://nodejs.org/en/)
 * [Express.js](https://expressjs.com/ru/)
-###База данных:
+### База данных:
 * [PostgresSQL](https://www.postgresql.org)
 
 ## Страницы:
